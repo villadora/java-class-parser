@@ -1,0 +1,29 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/villa/.nvm/v0.11.13/bin/node',
+1 verbose cli   '/Users/villa/.nvm/v0.11.13/bin/npm',
+1 verbose cli   'run',
+1 verbose cli   'test' ]
+2 info using npm@1.4.9
+3 info using node@v0.11.13
+4 verbose run-script [ 'pretest', 'test', 'posttest' ]
+5 info pretest java-class-parser@0.1.1
+6 info test java-class-parser@0.1.1
+7 verbose unsafe-perm in lifecycle true
+8 info java-class-parser@0.1.1 Failed to exec test script
+9 error java-class-parser@0.1.1 test: `mocha -R spec test`
+9 error Exit status 1
+10 error Failed at the java-class-parser@0.1.1 test script.
+10 error This is most likely a problem with the java-class-parser package,
+10 error not with npm itself.
+10 error Tell the author that this fails on your system:
+10 error     mocha -R spec test
+10 error You can get their info via:
+10 error     npm owner ls java-class-parser
+10 error There is likely additional logging output above.
+11 error System Darwin 14.0.0
+12 error command "/Users/villa/.nvm/v0.11.13/bin/node" "/Users/villa/.nvm/v0.11.13/bin/npm" "run" "test"
+13 error cwd /Users/villa/dev/personal/projects/js/java-class-parser
+14 error node -v v0.11.13
+15 error npm -v 1.4.9
+16 error code ELIFECYCLE
+17 verbose exit [ 1, true ]

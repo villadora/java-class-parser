@@ -1,12 +1,13 @@
 {
   "name": "java-class-parser",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "java-class-parser",
   "main": "index.js",
   "bin": {
     "jjs-parser": "./bin/jjs-parser.js"
   },
   "scripts": {
+    "test": "./node_modules/.bin/mocha -R spec test"
   },
   "repository": {
     "type": "git",
@@ -17,7 +18,7 @@
     "class",
     "parser"
   ],
-  "engines": { 
+  "engines": {
     "node": ">=0.10.0"
   },
   "author": "villadora",
@@ -26,5 +27,7 @@
     "url": "https://github.com/villadora/java-class-parser/issues"
   },
   "devDependencies": {
+    "chai": "^1.10.0",
+    "mocha": "^2.0.1"
   }
 }

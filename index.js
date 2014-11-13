@@ -46,8 +46,8 @@ module.exports = function(files, options, cb) {
 
 
 
-var classRegex = new RegExp('public class ([a-zA-Z\\.<>\\?]+) {([^}]+)}', 'gm');
-var methodRegex = new RegExp('([a-zA-Z]+)\\(([^\\)]*)\\)');
+var classRegex = new RegExp('(?:a-z)* class ([a-zA-Z\\.<>\\?]+) {([^}]+)}', 'gm');
+var methodRegex = new RegExp('(a-z)* ([a-zA-Z\\.<>\\?])+ ([a-zA-Z]+)\\(([^\\)]*)\\)');
 
 
 function outputParser(output) {
@@ -59,28 +59,29 @@ function outputParser(output) {
     var classBody = or[2].split('\n').filter(Boolean).map(function(str) { return str.trim(); });
     var clz = {
       name: className,
+      constructors: [],
       methods: []
     };
 
     classBody.forEach(function(method) {
-      var signature = method.split(' ');
+      var signature = methodRegex.exec(method);
       if (signature.length == 2) { // constructor
-        clz.cons = {
+        var cons = {
           scope: signature[0]
         };
-        
-        var cons = signature[1];
+
         var mc = methodRegex.exec(signature[1]);
         if (mc) {
-          clz.cons.name = mc[1];
-          clz.cons.args = mc[2] ? mc[2].split(',') : [];
+          cons.name = mc[1];
+          cons.args = mc[2] ? mc[2].split(',') : [];
         }
+        
+        clz.constructors.push(cons);
       }else {
         var m = {
           scope: signature[0],
           ret: signature[1]
         };
-        
         var mc = methodRegex.exec(signature[2]);
         if (mc) {
           m.name = mc[1];
