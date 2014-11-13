@@ -3,18 +3,22 @@
   "version": "0.1.0",
   "description": "java-class-parser",
   "main": "index.js",
+  "bin": {
+    "jjs-parser": "./bin/jjs-parser.js"
+  },
   "scripts": {
-    "test": "make test"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/villadora/java-class-parser.git"
   },
   "keywords": [
-    "java-class-parser"
+    "java",
+    "class",
+    "parser"
   ],
   "engines": { 
-    "node": ">=0.11.0"
+    "node": ">=0.10.0"
   },
   "author": "villadora",
   "license": "MIT",
@@ -22,7 +26,5 @@
     "url": "https://github.com/villadora/java-class-parser/issues"
   },
   "devDependencies": {
-    "mocha": "*",
-    "chai": "*"
   }
 }
