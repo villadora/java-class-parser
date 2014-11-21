@@ -45,43 +45,83 @@ module.exports = function(files, options, cb) {
 };
 
 
+var typeRegex = '[a-zA-Z0-9\\.<>\\?\\$\\[\\]]+';
 
-var classRegex = new RegExp('(?:a-z)* class ([a-zA-Z\\.<>\\?]+) {([^}]+)}', 'gm');
-var methodRegex = new RegExp('([a-zA-Z]+) (?:([a-zA-Z\\.<>\\?]+) )?([a-zA-Z]+)\\(([^\\)]*)\\)');
 
+var classRegex = new RegExp('(?:(public|private|protected) )?((?:(?:static|abstract|final) ?)*)(class|interface) (' + typeRegex + ') (?:extends ((?:' + typeRegex +'),?)+ )?(?:implements ((?:[a-zA-Z0-9\\.<>\\?\\$])+,?)+ )?{([^}]+)}', 'gm');
+//                             access modifier              return value             name
+var methodRegex = new RegExp('(?:(public|private|protected) )?((?:static|abstract|final) ?)*(?:(' + typeRegex + ') )?([a-zA-Z]+)\\(([^\\)]*)\\)');
+
+
+var fieldRegex = new RegExp('(?:(public|private|protected) )?((?:(?:static|abstract|final) ?)*)(' + typeRegex + ') ([a-zA-Z0-9]+)');
 
 function outputParser(output) {
   var rs = {};
   var or = classRegex.exec(output);
 
   while(or) {
-    var className = or[1];
-    var classBody = or[2].split('\n').filter(Boolean).map(function(str) { return str.trim(); });
+    var scope = or[1] || 'package';
+    var describe = or[2];
+    var type = or[3];
+    var className = or[4];
+    var exts = or[5];
+    var impls = or[6];
+    var classBody = or[7].split('\n').filter(Boolean).map(trimStr);
     var clz = {
       name: className,
+      type: type,
+      scope: scope,
+      describe: (describe || '').trim(),
+      'extends': exts ? exts.split(',').map(trimStr) : [],
+      'implements': impls ? impls.split(',').map(trimStr) : [],
       constructors: [],
+      fields: [],
       methods: []
     };
 
-    classBody.forEach(function(method) {
-      var signature = methodRegex.exec(method);
-      if (signature[2] == undefined) { // no ret, constructor
+    classBody.forEach(function(member) {
+      var signature = methodRegex.exec(member);
+      if (!signature)  {
+        signature = fieldRegex.exec(member);
+        if (signature) {
+          var scope = signature[1] || 'package';
+          var describe = (signature[2] || '').trim();
+          var type = signature[3];
+          var name = signature[4];
+          clz.fields.push({
+            name: name,
+            scope: scope,
+            type: type,
+            describe: describe
+          });
+        }
+
+        return;
+      }
+
+      var scope = signature[1] || 'package';
+      var describe = (signature[2] || '').trim();
+      var retVal = signature[3];
+      var name = signature[4];
+      var args = signature[5];
+      if (retVal == undefined) { // no ret, constructor
         var cons = {
-          scope: signature[1]
+          scope: scope,
+          name: name,
+          describe: describe,
+          args: args ? args.split(',').map(trimStr) : []
         };
 
-        cons.name = signature[3];
-        cons.args = signature[4] ? signature[4].split(',') : []; 
-        
         clz.constructors.push(cons);
       }else {
         var m = {
-          scope: signature[1],
-          ret: signature[2]
+          scope: scope,
+          describe: describe,
+          ret: retVal,
+          name: name,
+          args: args ? args.split(',').map(trimStr) : []
         };
 
-        m.name = signature[3];
-        m.args = signature[4] ? signature[3].split(',') : [];
         clz.methods.push(m);
       }
     });
@@ -92,4 +132,10 @@ function outputParser(output) {
   }
 
   return rs;
+}
+
+
+
+function trimStr(str) {
+  return str.trim();
 }

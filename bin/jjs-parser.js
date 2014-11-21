@@ -11,8 +11,17 @@ parser(args, function(err, rs) {
 
   for(var clzName in rs) {
     var clz = rs[clzName];
-    console.log(clzName + ':');
-    console.log('\tconstructor: %s %s(%s)', clz.cons.scope, clz.cons.name, clz.cons.args.join(','));
+
+    console.log('%s extends :', clzName, clz.extends.join(','));
+    clz.constructors.forEach(function(cons) {
+      console.log('\tconstructor: %s %s(%s)', cons.scope, cons.name, cons.args.join(','));
+    });
+
+    console.log('\tfields:');
+    clz.fields.forEach(function(f) {
+      console.log('\t\t%s %s %s', f.scope, f.type, f.name);
+    });
+
     console.log('\tmethods:');
     clz.methods.forEach(function(method) {
       console.log('\t\t%s %s %s(%s)', method.scope, method.ret, method.name, method.args.join(','));

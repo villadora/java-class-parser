@@ -28,6 +28,7 @@ parser.parse(clazzes, function(err, rs) {
     for (var clzName in rs) {
         var clz = rs[clzName];
         clz.constructors; // constructors, each constructor includes property scope, name, args
+        clz.fields; // an array of fields
         clz.methods; // an array of methods;
         clz.methods[0]; // method, includes property scope, ret, name, args
     }
