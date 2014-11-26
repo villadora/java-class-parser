@@ -2,7 +2,6 @@
 
 var parser = require('../');
 
-
 var args = process.argv.slice(2);
 
 parser(args, function(err, rs) {
@@ -12,7 +11,7 @@ parser(args, function(err, rs) {
   for(var clzName in rs) {
     var clz = rs[clzName];
 
-    console.log('%s extends :', clzName, clz.extends.join(','));
+    console.log('%s%s%s :', clzName, clz.extends.length ? (' extends ' + clz.extends.join(',')) :'', (clz.implements.length) ? (' implements ' + clz.implements.join(',')) : '');
     clz.constructors.forEach(function(cons) {
       console.log('\tconstructor: %s %s(%s)', cons.scope, cons.name, cons.args.join(','));
     });
